@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SmartBot Perú — Apps & Automatización con IA</title>
+<meta name="description" content="Desarrollo apps web PWA y sistemas de automatización para negocios en Perú. Barberías, canchas, restaurantes y más. Desde S/ 80/mes."/>
+<meta name="keywords" content="apps web Peru, automatización negocios Lima, PWA Peru, sistema reservas barberia Peru, developer Peru"/>
+<meta name="theme-color" content="#050d1a"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png"/>
+<meta property="og:title" content="SmartBot Perú — Apps & Automatización con IA"/>
+<meta property="og:description" content="Apps PWA profesionales para tu negocio. Reservas, catálogos, automatización. Sin App Store."/>
+<meta property="og:url" content="https://smartbots-sites.netlify.app/"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Oxanium:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+:root {
+  --bg:        #050d1a;
+  --bg2:       #071223;
+  --bg3:       #0a1a30;
+  --surface:   #0d1e35;
+  --surface2:  #102440;
+  --border:    rgba(56,139,253,0.12);
+  --border2:   rgba(56,139,253,0.25);
+  --blue:      #388bfd;
+  --blue-light:#58a6ff;
+  --blue-dim:  #1f4f8f;
+  --cyan:      #39d0f0;
+  --white:     #e6edf3;
+  --muted:     #7d8fa8;
+  --muted2:    #4a5f78;
+  --wa:        #25d366;
+  --r:         12px;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Space Grotesk', sans-serif;
+  background:var(--bg);
+  color:var(--white);
+  overflow-x:hidden;
+  line-height:1.6;
+}
+a { text-decoration:none; color:inherit; }
+img { max-width:100%; display:block; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-thumb { background:var(--blue-dim); border-radius:4px; }
+
+/* ── NOISE ── */
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:.5;
+}
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:900;
+  height:64px; padding:0 24px;
+  display:flex; align-items:center; justify-content:space-between;
+  transition:all .3s;
+}
+nav.scrolled {
+  background:rgba(5,13,26,.95);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo {
+  font-family:'Oxanium', sans-serif;
+  font-size:1.2rem; font-weight:800;
+  letter-spacing:1px;
+  display:flex; align-items:center; gap:8px;
+}
+.nav-logo .bracket { color:var(--blue); }
+.nav-links {
+  display:none; gap:32px;
+}
+@media(min-width:768px) { .nav-links { display:flex; } }
+.nav-links a {
+  font-size:.85rem; font-weight:500;
+  color:var(--muted); transition:color .2s;
+  letter-spacing:.3px;
+}
+.nav-links a:hover { color:var(--white); }
+.nav-cta {
+  display:flex; align-items:center; gap:7px;
+  background:var(--blue); color:#fff;
+  padding:8px 18px; border-radius:8px;
+  font-size:.82rem; font-weight:700;
+  letter-spacing:.5px; transition:all .2s;
+}
+.nav-cta:hover { background:var(--blue-light); transform:translateY(-1px); }
+
+/* ── HERO ── */
+.hero {
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  padding:80px 24px 60px;
+  max-width:1100px;
+  margin:0 auto;
+  position:relative;
+  gap:40px;
+}
+@media(max-width:768px) {
+  .hero { grid-template-columns:1fr; padding-top:100px; text-align:center; }
+}
+
+.hero-left { position:relative; z-index:1; }
+
+.hero-tag {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(56,139,253,.1); border:1px solid var(--border2);
+  color:var(--blue-light); padding:5px 14px; border-radius:20px;
+  font-size:.75rem; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+  margin-bottom:20px;
+  animation:fadeUp .6s ease both;
+}
+
+.hero h1 {
+  font-family:'Oxanium', sans-serif;
+  font-size:clamp(2.2rem, 5vw, 3.8rem);
+  font-weight:800; line-height:1.05;
+  letter-spacing:-1px; margin-bottom:20px;
+  animation:fadeUp .6s .1s ease both;
+}
+.hero h1 .accent {
+  background:linear-gradient(135deg, var(--blue-light), var(--cyan));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.hero-sub {
+  font-size:1rem; color:var(--muted);
+  max-width:460px; line-height:1.75;
+  margin-bottom:32px;
+  animation:fadeUp .6s .2s ease both;
+}
+@media(max-width:768px) { .hero-sub { margin:0 auto 32px; } }
+
+.hero-btns {
+  display:flex; gap:12px; flex-wrap:wrap;
+  animation:fadeUp .6s .3s ease both;
+}
+@media(max-width:768px) { .hero-btns { justify-content:center; } }
+
+.btn-wa {
+  display:inline-flex; align-items:center; gap:9px;
+  background:var(--wa); color:#fff;
+  padding:13px 24px; border-radius:10px;
+  font-size:.92rem; font-weight:700;
+  transition:all .25s;
+  box-shadow:0 4px 20px rgba(37,211,102,.3);
+}
+.btn-wa:hover { background:#1db954; transform:translateY(-2px); box-shadow:0 8px 32px rgba(37,211,102,.45); }
+.btn-wa i { font-size:1.1rem; }
+
+.btn-outline {
+  display:inline-flex; align-items:center; gap:8px;
+  background:transparent; color:var(--white);
+  padding:13px 24px; border-radius:10px;
+  font-size:.92rem; font-weight:600;
+  border:1px solid var(--border2);
+  transition:all .25s;
+}
+.btn-outline:hover { border-color:var(--blue-light); color:var(--blue-light); }
+
+/* HERO RIGHT — FOTO */
+.hero-right {
+  position:relative;
+  display:flex; justify-content:center; align-items:flex-end;
+  animation:fadeUp .8s .2s ease both;
+}
+@media(max-width:768px) { .hero-right { order:-1; max-height:340px; overflow:hidden; } }
+
+.hero-photo-wrap {
+  position:relative;
+  width:100%; max-width:360px;
+}
+
+/* Glows detrás de la foto */
+.hero-photo-wrap::before {
+  content:'';
+  position:absolute;
+  bottom:0; left:50%;
+  transform:translateX(-50%);
+  width:280px; height:280px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(56,139,253,.25), transparent 70%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.hero-photo {
+  width:100%;
+  position:relative; z-index:1;
+  /* Efecto transparencia — recorta el fondo con gradient en la parte inferior */
+  mask-image:linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom, black 60%, transparent 100%);
+  filter:drop-shadow(0 0 40px rgba(56,139,253,.2));
+}
+
+/* Tarjetas flotantes */
+.float-card {
+  position:absolute; z-index:2;
+  background:rgba(13,30,53,.9);
+  border:1px solid var(--border2);
+  backdrop-filter:blur(10px);
+  border-radius:12px;
+  padding:10px 14px;
+  font-size:.78rem;
+}
+.float-card-1 {
+  top:15%; left:-10px;
+  animation:floatA 3s ease-in-out infinite;
+}
+.float-card-2 {
+  top:45%; right:-10px;
+  animation:floatB 3.5s ease-in-out infinite;
+}
+.float-card .fc-label { color:var(--muted); font-size:.68rem; margin-bottom:3px; }
+.float-card .fc-val { color:var(--blue-light); font-weight:700; font-size:.9rem; }
+
+@keyframes floatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+
+/* ── DIVIDER ── */
+.divider {
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--border2), transparent);
+  max-width:1100px; margin:0 auto;
+}
+
+/* ── STATS ── */
+.stats {
+  padding:48px 24px;
+  max-width:1100px; margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+@media(min-width:600px) { .stats { grid-template-columns:repeat(4,1fr); } }
+.stat-box {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:20px 16px; text-align:center;
+  transition:border-color .2s, transform .2s;
+}
+.stat-box:hover { border-color:var(--border2); transform:translateY(-2px); }
+.stat-num {
+  font-family:'Oxanium', sans-serif;
+  font-size:2rem; font-weight:800;
+  background:linear-gradient(135deg,var(--blue-light),var(--cyan));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.stat-lbl { font-size:.75rem; color:var(--muted); margin-top:4px; }
+
+/* ── SECTION COMMONS ── */
+section { padding:80px 24px; }
+.sec-inner { max-width:1100px; margin:0 auto; }
+.sec-head { text-align:center; margin-bottom:48px; }
+.sec-tag-small {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(56,139,253,.08); border:1px solid var(--border);
+  color:var(--blue-light); padding:4px 12px; border-radius:20px;
+  font-size:.7rem; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+  margin-bottom:12px;
+}
+.sec-head h2 {
+  font-family:'Oxanium', sans-serif;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  font-weight:800; letter-spacing:-.5px;
+  line-height:1.1; margin-bottom:12px;
+}
+.sec-head h2 .accent {
+  background:linear-gradient(135deg,var(--blue-light),var(--cyan));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.sec-head p { font-size:.95rem; color:var(--muted); max-width:480px; margin:0 auto; }
+
+/* ── SOBRE MÍ ── */
+.about-sec { background:var(--bg2); }
+.about-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:48px; align-items:center;
+  max-width:1100px; margin:0 auto;
+}
+@media(max-width:768px) { .about-grid { grid-template-columns:1fr; } }
+
+.about-img-wrap {
+  position:relative;
+  border-radius:20px; overflow:hidden;
+  border:1px solid var(--border2);
+}
+.about-img-wrap img {
+  width:100%; object-fit:cover;
+  filter:saturate(.9);
+}
+.about-img-wrap::after {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(to top, var(--bg2) 0%, transparent 40%);
+}
+
+.about-badge {
+  position:absolute; bottom:20px; left:20px; z-index:2;
+  background:rgba(5,13,26,.9); border:1px solid var(--border2);
+  border-radius:10px; padding:10px 16px;
+  backdrop-filter:blur(10px);
+}
+.about-badge .ab-title { font-size:.7rem; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+.about-badge .ab-name { font-family:'Oxanium',sans-serif; font-size:1rem; font-weight:700; color:var(--blue-light); }
+.about-badge .ab-role { font-size:.75rem; color:var(--muted); }
+
+.about-content h2 {
+  font-family:'Oxanium', sans-serif;
+  font-size:clamp(1.6rem,3vw,2.2rem);
+  font-weight:800; margin-bottom:16px; line-height:1.15;
+}
+.about-content h2 .accent {
+  background:linear-gradient(135deg,var(--blue-light),var(--cyan));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.about-content p { color:var(--muted); line-height:1.8; margin-bottom:24px; font-size:.95rem; }
+
+.skills-list {
+  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:28px;
+}
+.skill-tag {
+  background:rgba(56,139,253,.08); border:1px solid var(--border);
+  color:var(--blue-light); padding:5px 12px; border-radius:20px;
+  font-size:.78rem; font-weight:600;
+}
+
+/* ── APPS ── */
+.apps-grid {
+  display:grid; grid-template-columns:1fr;
+  gap:16px;
+}
+@media(min-width:600px) { .apps-grid { grid-template-columns:repeat(2,1fr); } }
+@media(min-width:960px) { .apps-grid { grid-template-columns:repeat(3,1fr); } }
+
+.app-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px; padding:24px;
+  display:flex; flex-direction:column; gap:12px;
+  transition:all .25s; position:relative; overflow:hidden;
+}
+.app-card::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--blue), var(--cyan));
+  transform:scaleX(0); transform-origin:left;
+  transition:transform .3s;
+}
+.app-card:hover { border-color:var(--border2); transform:translateY(-4px); box-shadow:0 20px 48px rgba(0,0,0,.4); }
+.app-card:hover::before { transform:scaleX(1); }
+
+.app-icon-wrap {
+  width:52px; height:52px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.4rem;
+}
+.app-card h3 { font-family:'Oxanium',sans-serif; font-size:1rem; font-weight:700; }
+.app-card p { font-size:.85rem; color:var(--muted); line-height:1.6; flex:1; }
+.app-card-foot {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:4px;
+}
+.app-price { font-size:.9rem; font-weight:700; color:var(--blue-light); }
+.app-btn {
+  padding:6px 14px; border-radius:20px;
+  font-size:.75rem; font-weight:700;
+  background:rgba(56,139,253,.1); border:1px solid var(--border2);
+  color:var(--blue-light); transition:all .2s; cursor:pointer;
+}
+.app-btn:hover { background:var(--blue); color:#fff; border-color:var(--blue); }
+
+/* ── COMO FUNCIONA ── */
+.how-sec { background:var(--bg2); }
+.steps-grid {
+  display:grid; grid-template-columns:1fr;
+  gap:0; max-width:720px; margin:0 auto;
+}
+.step {
+  display:flex; gap:24px; padding:28px 0;
+  border-bottom:1px solid var(--border);
+}
+.step:last-child { border-bottom:none; }
+.step-num {
+  font-family:'Oxanium',sans-serif;
+  font-size:3rem; font-weight:800;
+  color:rgba(56,139,253,.15); line-height:1; flex-shrink:0; width:60px;
+}
+.step h3 { font-family:'Oxanium',sans-serif; font-size:1.05rem; font-weight:700; margin-bottom:6px; }
+.step p { font-size:.88rem; color:var(--muted); line-height:1.7; }
+.step-badge {
+  display:inline-block; margin-top:10px;
+  background:rgba(57,208,240,.08); border:1px solid rgba(57,208,240,.2);
+  color:var(--cyan); padding:3px 10px; border-radius:20px;
+  font-size:.72rem; font-weight:700;
+}
+
+/* ── PRECIOS ── */
+.pricing-grid {
+  display:grid; grid-template-columns:1fr; gap:16px;
+}
+@media(min-width:700px) { .pricing-grid { grid-template-columns:repeat(3,1fr); } }
+
+.price-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:18px; padding:28px 24px;
+  display:flex; flex-direction:column;
+  transition:all .25s; position:relative; overflow:hidden;
+}
+.price-card.hot {
+  border-color:var(--border2);
+  background:linear-gradient(135deg, var(--bg3), var(--surface));
+  box-shadow:0 0 60px rgba(56,139,253,.1);
+}
+.price-card.hot::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,var(--blue),var(--cyan));
+}
+.price-hot-badge {
+  display:inline-block; background:linear-gradient(135deg,var(--blue),var(--cyan));
+  color:#fff; font-size:.68rem; font-weight:800;
+  padding:3px 10px; border-radius:20px; margin-bottom:14px; width:fit-content;
+}
+.price-name { font-size:.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+.price-amount {
+  font-family:'Oxanium',sans-serif; font-size:3rem; font-weight:800; line-height:1;
+  margin-bottom:4px;
+}
+.price-amount sup { font-size:1.1rem; vertical-align:top; margin-top:8px; display:inline-block; }
+.price-period { font-size:.8rem; color:var(--muted); margin-bottom:20px; }
+.price-divider { height:1px; background:var(--border); margin-bottom:18px; }
+.price-features { list-style:none; display:flex; flex-direction:column; gap:10px; flex:1; }
+.price-features li {
+  font-size:.85rem; color:var(--muted);
+  display:flex; align-items:flex-start; gap:8px;
+}
+.price-features li::before { content:'✓'; color:var(--blue-light); font-weight:800; flex-shrink:0; }
+.price-cta {
+  margin-top:22px; padding:12px; border-radius:10px;
+  font-size:.88rem; font-weight:700; text-align:center;
+  transition:all .2s; display:block; cursor:pointer;
+}
+.price-cta.solid {
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  color:#fff; box-shadow:0 4px 20px rgba(56,139,253,.3);
+}
+.price-cta.solid:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(56,139,253,.5); }
+.price-cta.ghost {
+  background:transparent; border:1px solid var(--border2); color:var(--white);
+}
+.price-cta.ghost:hover { border-color:var(--blue-light); color:var(--blue-light); }
+
+/* ── FAQ ── */
+.faq-list { max-width:680px; margin:0 auto; display:flex; flex-direction:column; gap:10px; }
+.faq-item {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; overflow:hidden; transition:border-color .2s;
+}
+.faq-item.open { border-color:var(--border2); }
+.faq-q {
+  padding:16px 20px; cursor:pointer;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  font-size:.9rem; font-weight:600; user-select:none;
+}
+.faq-q i { color:var(--muted); transition:transform .3s, color .3s; flex-shrink:0; }
+.faq-item.open .faq-q i { transform:rotate(45deg); color:var(--blue-light); }
+.faq-a {
+  max-height:0; overflow:hidden; transition:max-height .35s ease, padding .35s;
+  font-size:.85rem; color:var(--muted); line-height:1.7; padding:0 20px;
+}
+.faq-item.open .faq-a { max-height:200px; padding:0 20px 16px; }
+
+/* ── CTA FINAL ── */
+.final-cta {
+  padding:100px 24px; text-align:center;
+  background:linear-gradient(to bottom, transparent, var(--bg2));
+  position:relative; overflow:hidden;
+}
+.final-cta::before {
+  content:''; position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  width:500px; height:500px; border-radius:50%;
+  background:radial-gradient(circle, rgba(56,139,253,.07), transparent 70%);
+  pointer-events:none;
+}
+.final-cta h2 {
+  font-family:'Oxanium',sans-serif;
+  font-size:clamp(2rem,5vw,3.5rem); font-weight:800;
+  letter-spacing:-1px; margin-bottom:14px; line-height:1.05;
+  position:relative; z-index:1;
+}
+.final-cta h2 .accent {
+  background:linear-gradient(135deg,var(--blue-light),var(--cyan));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.final-cta p { color:var(--muted); font-size:.95rem; margin-bottom:32px; max-width:420px; margin-left:auto; margin-right:auto; position:relative; z-index:1; }
+.wa-big {
+  display:inline-flex; align-items:center; gap:12px;
+  background:var(--wa); color:#fff;
+  padding:16px 32px; border-radius:12px;
+  font-size:1rem; font-weight:800;
+  transition:all .25s; box-shadow:0 4px 32px rgba(37,211,102,.4);
+  position:relative; z-index:1;
+}
+.wa-big:hover { background:#1db954; transform:translateY(-3px); box-shadow:0 10px 48px rgba(37,211,102,.55); }
+.wa-big i { font-size:1.3rem; }
+.guarantee {
+  margin-top:18px; font-size:.78rem; color:var(--muted2);
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  position:relative; z-index:1;
+}
+.guarantee i { color:var(--blue-light); }
+
+/* ── FOOTER ── */
+footer {
+  padding:36px 24px; border-top:1px solid var(--border);
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
+  gap:12px; max-width:1100px; margin:0 auto;
+}
+.footer-logo {
+  font-family:'Oxanium',sans-serif; font-size:1.1rem; font-weight:800;
+}
+.footer-logo .accent { color:var(--blue-light); }
+footer p { font-size:.75rem; color:var(--muted2); }
+
+/* ── FLOAT WA ── */
+.float-wa {
+  position:fixed; bottom:24px; right:20px; z-index:800;
+  width:54px; height:54px; border-radius:50%;
+  background:var(--wa);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 24px rgba(37,211,102,.5);
+  transition:transform .2s;
+}
+.float-wa:hover { transform:scale(1.1); }
+.float-wa i { font-size:1.5rem; color:#fff; }
+.float-wa-pulse {
+  position:absolute; inset:0; border-radius:50%;
+  background:var(--wa); opacity:.5;
+  animation:waPulse 2.5s ease-out infinite;
+}
+@keyframes waPulse { 0%{transform:scale(1);opacity:.5} 100%{transform:scale(1.8);opacity:0} }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.reveal { opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:480px) {
+  .hero-btns { flex-direction:column; }
+  .btn-wa, .btn-outline { justify-content:center; }
+  footer { flex-direction:column; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">
+    <span class="bracket">&lt;/&gt;</span> SmartBot<span style="color:var(--blue-light)">Perú</span>
+  </div>
+  <div class="nav-links">
+    <a href="#sobre-mi">Sobre mí</a>
+    <a href="#apps">Apps</a>
+    <a href="#como-funciona">Proceso</a>
+    <a href="#precios">Precios</a>
+  </div>
+  <a href="https://wa.me/51934870753?text=Hola%2C%20quiero%20información%20sobre%20SmartBot%20Perú" class="nav-cta" target="_blank">
+    <i class="fa-brands fa-whatsapp"></i> Hablar ahora
+  </a>
+</nav>
+
+<!-- HERO -->
+<div style="position:relative; overflow:hidden;">
+  <!-- Glow de fondo -->
+  <div style="position:absolute; top:10%; left:30%; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle, rgba(56,139,253,.07), transparent 70%); pointer-events:none;"></div>
+  <!-- Grid lines -->
+  <div style="position:absolute; inset:0; pointer-events:none; background-image:linear-gradient(rgba(56,139,253,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(56,139,253,.03) 1px, transparent 1px); background-size:60px 60px; mask-image:radial-gradient(ellipse 80% 60% at 50% 40%, black, transparent);"></div>
+
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-tag"><i class="fa fa-code"></i> Desarrollador & Automatización IA</div>
+      <h1>Apps que hacen<br/>trabajar tu negocio<br/><span class="accent">mientras duermes</span></h1>
+      <p class="hero-sub">Construyo aplicaciones web PWA y sistemas de automatización para negocios en Perú. Barberías, canchas, restaurantes y más — listos en 48 horas.</p>
+      <div class="hero-btns">
+        <a href="https://wa.me/51934870753?text=Hola%2C%20quiero%20una%20app%20para%20mi%20negocio" class="btn-wa" target="_blank">
+          <i class="fa-brands fa-whatsapp"></i> Quiero mi app
+        </a>
+        <a href="#apps" class="btn-outline">Ver apps <i class="fa fa-arrow-down"></i></a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-photo-wrap">
+        <img src="edgar-full.png" alt="Edgar — SmartBot Perú" class="hero-photo">
+        <div class="float-card float-card-1">
+          <div class="fc-label">Apps activas</div>
+          <div class="fc-val">Barber Flow ✓</div>
+        </div>
+        <div class="float-card float-card-2">
+          <div class="fc-label">Tiempo de entrega</div>
+          <div class="fc-val">48 horas ⚡</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-box reveal">
+    <div class="stat-num">48h</div>
+    <div class="stat-lbl">Entrega garantizada</div>
+  </div>
+  <div class="stat-box reveal">
+    <div class="stat-num">PWA</div>
+    <div class="stat-lbl">Sin App Store</div>
+  </div>
+  <div class="stat-box reveal">
+    <div class="stat-num">24/7</div>
+    <div class="stat-lbl">Tu app siempre activa</div>
+  </div>
+  <div class="stat-box reveal">
+    <div class="stat-num">S/80</div>
+    <div class="stat-lbl">Desde al mes</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SOBRE MÍ -->
+<section class="about-sec" id="sobre-mi">
+  <div class="about-grid">
+    <div class="about-img-wrap reveal">
+      <img src="edgar-face.png" alt="Edgar">
+      <div class="about-badge">
+        <div class="ab-title">Desarrollador</div>
+        <div class="ab-name">Edgar</div>
+        <div class="ab-role">SmartBot Perú · Lima</div>
+      </div>
+    </div>
+    <div class="about-content reveal">
+      <h2>Hola, soy Edgar.<br/><span class="accent">Construyo apps</span><br/>para negocios reales.</h2>
+      <p>Soy desarrollador independiente en Lima, especializado en aplicaciones web progresivas (PWA) para pequeños y medianos negocios. Mi enfoque es simple: apps que funcionen, que se vean bien y que resuelvan problemas reales sin complicaciones.</p>
+      <p>Cada app que construyo está conectada a un sistema de control propio que me permite activarla, actualizarla o suspenderla en segundos. Tú te enfocas en tu negocio, yo me encargo de la tecnología.</p>
+      <div class="skills-list">
+        <span class="skill-tag">HTML · CSS · JS</span>
+        <span class="skill-tag">Supabase</span>
+        <span class="skill-tag">PWA</span>
+        <span class="skill-tag">Vercel</span>
+        <span class="skill-tag">Apps de Reservas</span>
+        <span class="skill-tag">Automatización</span>
+      </div>
+      <a href="https://wa.me/51934870753?text=Hola%20Edgar%2C%20quiero%20hablar%20sobre%20una%20app" class="btn-wa" target="_blank" style="width:fit-content;">
+        <i class="fa-brands fa-whatsapp"></i> Hablar con Edgar
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- APPS -->
+<section id="apps">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <div class="sec-tag-small"><i class="fa fa-mobile-screen"></i> Apps disponibles</div>
+      <h2>Soluciones listas para<br/><span class="accent">tu tipo de negocio</span></h2>
+      <p>Apps PWA personalizadas, instalables en cualquier celular sin App Store ni Google Play.</p>
+    </div>
+    <div class="apps-grid">
+      <div class="app-card reveal">
+        <div class="app-icon-wrap" style="background:rgba(212,175,55,.12);">💈</div>
+        <h3>Barber Flow</h3>
+        <p>Sistema de citas para barberías. Tus clientes eligen barbero, fecha y hora. La reserva llega directo al WhatsApp del barbero elegido.</p>
+        <div class="app-card-foot">
+          <div class="app-price">S/ 120/mes</div>
+          <a href="https://barberflow-landing-xi.vercel.app" class="app-btn" target="_blank">Ver demo</a>
+        </div>
+      </div>
+      <div class="app-card reveal">
+        <div class="app-icon-wrap" style="background:rgba(26,122,26,.12);">⚽</div>
+        <h3>ChapaTuCancha</h3>
+        <p>Reservas online para complejos deportivos. Múltiples canchas, control de horarios y precios por duración. Sin dobles reservas.</p>
+        <div class="app-card-foot">
+          <div class="app-price">S/ 80/mes</div>
+          <a href="https://chapa-tu-cancha-landig.vercel.app" class="app-btn" target="_blank">Ver demo</a>
+        </div>
+      </div>
+      <div class="app-card reveal">
+        <div class="app-icon-wrap" style="background:rgba(56,139,253,.12);">🛍️</div>
+        <h3>Catálogo Digital</h3>
+        <p>Catálogo de productos con carrito y pedidos directos por WhatsApp. Para tiendas, restaurantes y cualquier negocio con productos.</p>
+        <div class="app-card-foot">
+          <div class="app-price">Desde S/ 150/mes</div>
+          <a href="https://wa.me/51934870753?text=Quiero%20el%20catálogo%20digital" class="app-btn" target="_blank">Consultar</a>
+        </div>
+      </div>
+      <div class="app-card reveal">
+        <div class="app-icon-wrap" style="background:rgba(57,208,240,.12);">📅</div>
+        <h3>App a Medida</h3>
+        <p>¿Tu negocio necesita algo específico? Construyo apps personalizadas según tu rubro: salones, veterinarias, consultorios y más.</p>
+        <div class="app-card-foot">
+          <div class="app-price">Cotizar</div>
+          <a href="https://wa.me/51934870753?text=Quiero%20una%20app%20a%20medida" class="app-btn" target="_blank">Hablar</a>
+        </div>
+      </div>
+      <div class="app-card reveal">
+        <div class="app-icon-wrap" style="background:rgba(124,77,255,.12);">🤖</div>
+        <h3>Chatbot WhatsApp</h3>
+        <p>Bot inteligente que responde consultas, toma pedidos y captura leads automáticamente en tu WhatsApp Business 24/7.</p>
+        <div class="app-card-foot">
+          <div class="app-price">Desde S/ 200/mes</div>
+          <a href="https://wa.me/51934870753?text=Quiero%20un%20chatbot" class="app-btn" target="_blank">Consultar</a>
+        </div>
+      </div>
+      <div class="app-card reveal">
+        <div class="app-icon-wrap" style="background:rgba(37,211,102,.12);">📊</div>
+        <h3>Sistema Interno</h3>
+        <p>Panel de control personalizado para gestionar tu negocio: inventario, ventas, clientes o lo que necesites centralizar.</p>
+        <div class="app-card-foot">
+          <div class="app-price">Cotizar</div>
+          <a href="https://wa.me/51934870753?text=Quiero%20un%20sistema%20interno" class="app-btn" target="_blank">Hablar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CÓMO FUNCIONA -->
+<section class="how-sec" id="como-funciona">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <div class="sec-tag-small"><i class="fa fa-gears"></i> Proceso</div>
+      <h2>Tu app lista en<br/><span class="accent">3 pasos simples</span></h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div>
+          <h3>Me escribes por WhatsApp</h3>
+          <p>Me cuentas sobre tu negocio y qué necesitas. Te respondo en minutos. La consulta es gratis y sin compromiso.</p>
+          <span class="step-badge">⚡ 10 minutos</span>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <div>
+          <h3>Configuro tu app</h3>
+          <p>Personalizo todo con el nombre de tu negocio, tus datos y tus colores. Tú apruebas antes de activar.</p>
+          <span class="step-badge">🛠️ 24–48 horas</span>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <div>
+          <h3>Te entrego el link</h3>
+          <p>Recibes tu URL única. La compartes con tus clientes y empiezan a usarla de inmediato. Sin instalaciones complicadas.</p>
+          <span class="step-badge">🚀 Listo para usar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRECIOS -->
+<section id="precios">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <div class="sec-tag-small"><i class="fa fa-tags"></i> Precios</div>
+      <h2>Inversión que se paga<br/><span class="accent">desde el primer mes</span></h2>
+      <p>Sin contratos. Sin permanencia. Cancela cuando quieras.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card reveal">
+        <div class="price-name">Básico</div>
+        <div class="price-amount"><sup>S/</sup>80</div>
+        <div class="price-period">al mes · sin contrato</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>App de reservas simple</li>
+          <li>1 tipo de servicio</li>
+          <li>Panel básico</li>
+          <li>Confirmación por WhatsApp</li>
+          <li>Soporte por WhatsApp</li>
+        </ul>
+        <a href="https://wa.me/51934870753?text=Quiero%20el%20plan%20básico" class="price-cta ghost" target="_blank">Empezar →</a>
+      </div>
+      <div class="price-card hot reveal">
+        <div class="price-hot-badge">⭐ Más popular</div>
+        <div class="price-name">Profesional</div>
+        <div class="price-amount"><sup>S/</sup>120</div>
+        <div class="price-period">al mes · sin contrato</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>App completa con fotos</li>
+          <li>Múltiples barberos o canchas</li>
+          <li>WhatsApp directo a cada uno</li>
+          <li>PWA instalable en celular</li>
+          <li>Panel admin completo</li>
+          <li>Soporte prioritario</li>
+        </ul>
+        <a href="https://wa.me/51934870753?text=Quiero%20el%20plan%20profesional" class="price-cta solid" target="_blank">Lo quiero ahora</a>
+      </div>
+      <div class="price-card reveal">
+        <div class="price-name">A Medida</div>
+        <div class="price-amount" style="font-size:2rem; padding-top:8px;">Cotizar</div>
+        <div class="price-period">según requerimientos</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>App completamente personalizada</li>
+          <li>Integraciones especiales</li>
+          <li>Múltiples módulos</li>
+          <li>Chatbot incluido</li>
+          <li>Soporte dedicado</li>
+        </ul>
+        <a href="https://wa.me/51934870753?text=Quiero%20una%20app%20a%20medida" class="price-cta ghost" target="_blank">Consultar →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<section>
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <div class="sec-tag-small"><i class="fa fa-circle-question"></i> FAQ</div>
+      <h2>Preguntas <span class="accent">frecuentes</span></h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">¿Las apps funcionan en iPhone y Android? <i class="fa fa-plus"></i></div>
+        <div class="faq-a">Sí. Son PWAs — aplicaciones web progresivas que funcionan en cualquier celular con un navegador moderno. No necesitas descargar nada del App Store ni Google Play.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si no pago un mes? <i class="fa fa-plus"></i></div>
+        <div class="faq-a">La app se suspende automáticamente desde mi panel de control. Cuando regularices el pago, la reactivo en minutos. Sin pérdida de datos.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">¿Puedo cambiar los barberos, precios u horarios después? <i class="fa fa-plus"></i></div>
+        <div class="faq-a">Sí. Me avisas por WhatsApp y hago los cambios sin costo adicional. Generalmente en menos de 24 horas.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">¿Tengo que saber de tecnología para usarla? <i class="fa fa-plus"></i></div>
+        <div class="faq-a">No. La app está diseñada para que tus clientes la usen sin explicación. Y tú como dueño solo recibes los mensajes en tu WhatsApp.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">¿Puedo pedir una app diferente a las que muestras? <i class="fa fa-plus"></i></div>
+        <div class="faq-a">Sí. Construyo apps a medida para cualquier tipo de negocio. Escríbeme y conversamos sobre lo que necesitas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="final-cta">
+  <h2>¿Listo para darle<br/><span class="accent">tecnología a tu negocio?</span></h2>
+  <p>Escríbeme ahora por WhatsApp. En menos de 48 horas tienes tu app funcionando.</p>
+  <a href="https://wa.me/51934870753?text=Hola%20Edgar%2C%20quiero%20una%20app%20para%20mi%20negocio" class="wa-big" target="_blank">
+    <i class="fa-brands fa-whatsapp"></i> Hablar con Edgar ahora
+  </a>
+  <div class="guarantee">
+    <i class="fa fa-shield-halved"></i>
+    Consulta gratis · Sin compromiso · Respuesta en minutos
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">&lt;/&gt; Smart<span class="accent">Bot</span> Perú</div>
+  <p>© 2026 SmartBot Perú · Lima, Perú · 934 870 753</p>
+</footer>
+
+<!-- FLOAT WA -->
+<a href="https://wa.me/51934870753?text=Hola%20quiero%20información%20sobre%20SmartBot%20Perú" class="float-wa" target="_blank">
+  <div class="float-wa-pulse"></div>
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<script>
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', scrollY > 40);
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior:'smooth', block:'start' }); }
+  });
+});
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
